@@ -38,8 +38,3 @@ logs/
 *.db
 .pytype/
 .idea/
-
-# local Slack CLI/project state
-.slack/apps*.json
-.slack/cache/
-.slack/config.json

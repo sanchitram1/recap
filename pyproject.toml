@@ -18,6 +18,9 @@ dev = [
     "ruff==0.16.5",
 ]
 
+[project.scripts]
+recap = "recap.cli:main"
+
 [tool.setuptools]
 packages = ["listeners", "assets", "recap", "recap.parsers"]
 

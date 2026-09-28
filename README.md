@@ -114,6 +114,23 @@ ruff format
 pytest .
 ```
 
+### Scanning Slack score threads
+
+Set a Slack bot token locally; do not commit it or paste it into chat.
+The bot needs access to the channel plus `channels:read` and
+`channels:history`.
+
+```zsh
+export SLACK_BOT_TOKEN=xoxb-...
+recap --channel '#clued-in' --days 7
+```
+
+To scan an explicit UTC date window:
+
+```zsh
+recap --channel '#clued-in' --oldest 2026-09-21 --latest 2026-09-28
+```
+
 ## Project Structure
 
 ### `manifest.json`

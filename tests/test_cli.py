@@ -4,14 +4,16 @@ from __future__ import annotations
 
 from datetime import datetime, timezone
 from io import StringIO
+from pathlib import Path
 
 import pytest
 
-from recap.cli import collect_scores, print_report, resolve_window
+from recap.cli import collect_fixture_facts, collect_scores, main, print_fixture_facts, print_report, resolve_window
 from tests.fakes import FakeWebClient
 
 OLDEST = 1726444800.0
 LATEST = 1727049600.0
+FIXTURES = Path(__file__).parent / "fixtures"
 
 
 def test_collect_scores_reports_scores_and_parse_issues():
@@ -49,3 +51,37 @@ def test_resolve_window_defaults_to_days_before_latest():
 def test_resolve_window_rejects_inverted_range():
     with pytest.raises(ValueError, match="--oldest must be before --latest"):
         resolve_window(oldest="2026-09-28", latest="2026-09-21", days=7)
+
+
+def test_collect_fixture_facts_from_manual_slack_copy():
+    facts, issues = collect_fixture_facts(FIXTURES / "maptap_september_28.json")
+
+    assert issues == []
+    assert [(fact.date, fact.person, fact.game, fact.score) for fact in facts] == [
+        ("September 28", "Dirk", "maptap", 862),
+        ("September 28", "Sanchit Ram Arvind", "maptap", 938),
+        ("September 28", "Eva", "maptap", 837),
+        ("September 28", "Hannah Turk", "maptap", 895),
+    ]
+
+
+def test_print_fixture_facts_outputs_csv():
+    facts, _ = collect_fixture_facts(FIXTURES / "maptap_september_28.json")
+    output = StringIO()
+
+    print_fixture_facts(facts, output)
+
+    assert output.getvalue().splitlines() == [
+        "date,person,game,score",
+        "September 28,Dirk,maptap,862",
+        "September 28,Sanchit Ram Arvind,maptap,938",
+        "September 28,Eva,maptap,837",
+        "September 28,Hannah Turk,maptap,895",
+    ]
+
+
+def test_main_accepts_misspelled_fixtures_alias(capsys):
+    result = main(["fxitures", str(FIXTURES / "maptap_september_28.json")])
+
+    assert result == 0
+    assert "September 28,Sanchit Ram Arvind,maptap,938" in capsys.readouterr().out

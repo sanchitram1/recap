@@ -31,10 +31,11 @@ _CLAIMS = re.compile(r"final\s+score\s*:", re.IGNORECASE)
 _LOOSE_MAP = re.compile(rf"^{_TOKEN}(?:\s+{_TOKEN})+\s*$")
 # Strict map line: exactly 5 tokens — required for a valid score.
 _MAP_LINE = re.compile(rf"^{_TOKEN}(?:\s+{_TOKEN}){{4}}\s*$")
-_FINAL_SCORE = re.compile(r"^\s*final\s+score\s*:\s*(\d+)\s*$", re.IGNORECASE)
+_FINAL_SCORE = re.compile(r"^\s*final\s+score\s*:\s*(\d+)\b.*$", re.IGNORECASE)
+_PUZZLE_PREFIX = re.compile(r"^(?:https?://)?(?:www\.)?maptap\.gg\s+", re.IGNORECASE)
 # A line that is neither a map line nor a final-score line (the date/puzzle).
 _NOT_MAP_OR_SCORE = re.compile(
-    rf"^(?!{_TOKEN}(?:\s+{_TOKEN})*\s*$)(?!\s*final\s+score\s*:\s*\d+\s*$).+",
+    rf"^(?!{_TOKEN}(?:\s+{_TOKEN})*\s*$)(?!\s*final\s+score\s*:\s*\d+\b.*$).+",
     re.IGNORECASE,
 )
 
@@ -88,7 +89,7 @@ class MaptapParser:
             status="ok",
             score=Score(
                 game_slug=SLUG,
-                puzzle_id=puzzle_id,
+                puzzle_id=_normalize_puzzle_id(puzzle_id),
                 slack_user_id=message.user,
                 score_value=int(score_value.group(1)),
                 message_ts=message.ts,
@@ -115,3 +116,7 @@ def _find_line(lines: list[str], pattern: re.Pattern) -> str | None:
         if pattern.match(ln):
             return ln
     return None
+
+
+def _normalize_puzzle_id(value: str) -> str:
+    return _PUZZLE_PREFIX.sub("", value).strip()

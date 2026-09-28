@@ -3,10 +3,13 @@
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import os
 import sys
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta, timezone
+from pathlib import Path
 from typing import TextIO
 
 from slack_sdk import WebClient
@@ -35,6 +38,14 @@ class ScanReport:
     issues: list[ParseIssue]
 
 
+@dataclass(frozen=True)
+class FixtureFact:
+    date: str
+    person: str
+    game: str
+    score: int
+
+
 def collect_scores(client: SlackClient, *, channel: str, oldest: float, latest: float) -> ScanReport:
     """Fetch matching score threads and parse every message in them."""
     reader = SlackReader(client, channel)
@@ -60,6 +71,46 @@ def collect_scores(client: SlackClient, *, channel: str, oldest: float, latest: 
     )
 
 
+def collect_fixture_facts(path: Path) -> tuple[list[FixtureFact], list[ParseIssue]]:
+    data = json.loads(path.read_text())
+    rows = data["messages"] if isinstance(data, dict) else data
+    facts: list[FixtureFact] = []
+    issues: list[ParseIssue] = []
+
+    for index, row in enumerate(rows, start=1):
+        person = row.get("person") or row.get("user") or row.get("slack_user_id")
+        if not person:
+            raise ValueError(f"Fixture message {index} is missing person/user")
+        message = Message(
+            ts=str(row.get("ts") or f"{index}.000000"),
+            user=person,
+            text=row["text"],
+            thread_ts=row.get("thread_ts"),
+        )
+        result = parse_message(message)
+        if result.status == "ok" and result.score is not None:
+            facts.append(
+                FixtureFact(
+                    date=result.score.puzzle_id,
+                    person=person,
+                    game=result.score.game_slug,
+                    score=result.score.score_value,
+                )
+            )
+        elif result.status == "unparseable":
+            issues.append(ParseIssue(result.claimed_by, message, result.reason))
+
+    return facts, issues
+
+
+def print_fixture_facts(facts: list[FixtureFact], output: TextIO | None = None) -> None:
+    output = output or sys.stdout
+    writer = csv.writer(output)
+    writer.writerow(["date", "person", "game", "score"])
+    for fact in facts:
+        writer.writerow([fact.date, fact.person, fact.game, fact.score])
+
+
 def parse_datetime(value: str) -> datetime:
     """Parse YYYY-MM-DD or an ISO datetime as UTC unless a timezone is supplied."""
     if len(value) == 10:
@@ -79,7 +130,8 @@ def resolve_window(*, oldest: str | None, latest: str | None, days: int, now: da
     return oldest_dt, latest_dt
 
 
-def print_report(report: ScanReport, output: TextIO = sys.stdout) -> None:
+def print_report(report: ScanReport, output: TextIO | None = None) -> None:
+    output = output or sys.stdout
     print(f"Channel: {report.channel}", file=output)
     print(f"Window: {report.oldest.isoformat()} to {report.latest.isoformat()}", file=output)
     print(f"Score threads: {report.thread_count}", file=output)
@@ -114,7 +166,31 @@ def build_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def build_fixtures_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(description="Parse offline Slack message fixtures into recap facts.")
+    parser.add_argument("fixture", type=Path, help="Path to a JSON fixture file.")
+    return parser
+
+
+def main_fixtures(argv: list[str]) -> int:
+    parser = build_fixtures_parser()
+    args = parser.parse_args(argv)
+    try:
+        facts, issues = collect_fixture_facts(args.fixture)
+    except (KeyError, ValueError, json.JSONDecodeError) as exc:
+        parser.error(str(exc))
+
+    print_fixture_facts(facts)
+    for issue in issues:
+        print(f"unparseable {issue.message.user} {issue.message.ts}: {issue.reason}", file=sys.stderr)
+    return 1 if issues else 0
+
+
 def main(argv: list[str] | None = None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] in {"fixtures", "fxitures"}:
+        return main_fixtures(argv[1:])
+
     parser = build_parser()
     args = parser.parse_args(argv)
 

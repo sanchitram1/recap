@@ -30,6 +30,18 @@ def test_valid_post_parses_ok():
     assert r.score.emoji_grid == MAP
 
 
+def test_valid_post_strips_maptap_url_from_date():
+    r = P.parse(_msg(f"www.maptap.gg September 28\n{MAP}\nFinal score: 862"))
+    assert r.status == "ok"
+    assert r.score.puzzle_id == "September 28"
+
+
+def test_final_score_allows_slack_link_preview_trailing_text():
+    r = P.parse(_msg(f"www.maptap.gg September 28\n{MAP}\nFinal score: 862:dart:MapTap Daily Geography Game"))
+    assert r.status == "ok"
+    assert r.score.score_value == 862
+
+
 def test_valid_post_carries_message_metadata():
     r = P.parse(_msg(VALID, user="USAM001", ts="1790184619.488549"))
     s = r.score

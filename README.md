@@ -14,3 +14,10 @@ Read from solution threads on #clued-in
 ## Calculations
 
 - average per game for last week – beat this!
+
+## Run a fixture
+
+```zsh
+source .venv/bin/activate
+recap fixtures tests/fixtures/maptap_september_28.json
+```

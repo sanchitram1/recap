@@ -6,7 +6,7 @@ how well do we do on the games?
 
 ```
 Read from solution threads on #clued-in
-==> Parse outputs from each game
+==> Parse outputs from each message in the thread
 ==> (date, person, game, score)
 ==> math
 ```

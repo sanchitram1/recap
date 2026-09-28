@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "messages": [
+    {
+      "client_msg_id": "22222222-2222-2222-2222-222222222222",
+      "type": "message",
+      "text": "maptap scores 🧵",
+      "user": "UPARKER01",
+      "ts": "1726477800.000000",
+      "thread_ts": "1726477800.000000",
+      "team": "TT4DHP98W"
+    },
+    {
+      "client_msg_id": "cccc1ccc-cccc-cccc-cccc-cccccccccccc",
+      "type": "message",
+      "text": "September 16\n99:dart: 98:dart: 82:star2: 87:mortar_board: 80:sparkles:\nFinal score: 862",
+      "user": "UPARKER01",
+      "ts": "1726478700.000000",
+      "thread_ts": "1726477800.000000",
+      "team": "TT4DHP98W"
+    },
+    {
+      "client_msg_id": "dddd1ddd-dddd-dddd-dddd-dddddddddddd",
+      "type": "message",
+      "text": "September 16\n50:dart: 48:dart: 42:star2: 47:mortar_board: 40:sparkles:\nFinal score: 700",
+      "user": "USAM001",
+      "ts": "1726479600.000000",
+      "thread_ts": "1726477800.000000",
+      "team": "TT4DHP98W"
+    }
+  ],
+  "has_more": false,
+  "response_metadata": {
+    "next_cursor": ""
+  }
+}

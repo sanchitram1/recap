@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "messages": [
+    {
+      "client_msg_id": "44444444-4444-4444-4444-444444444444",
+      "type": "message",
+      "text": "krillion scores 🧵",
+      "user": "UPARKER01",
+      "ts": "1726995600.000000",
+      "thread_ts": "1726995600.000000",
+      "reply_count": 2,
+      "reply_users_count": 2,
+      "latest_reply": "1726997400.000000",
+      "reply_users": ["UPARKER01", "UALEX001"],
+      "subscribed": false,
+      "team": "TT4DHP98W"
+    },
+    {
+      "client_msg_id": "55555555-5555-5555-5555-555555555555",
+      "type": "message",
+      "text": "maptap scores 🧵",
+      "user": "UPARKER01",
+      "ts": "1726996200.000000",
+      "thread_ts": "1726996200.000000",
+      "reply_count": 1,
+      "reply_users_count": 1,
+      "latest_reply": "1726998000.000000",
+      "reply_users": ["UPARKER01", "UALEX001"],
+      "subscribed": false,
+      "team": "TT4DHP98W"
+    }
+  ],
+  "has_more": false,
+  "pin_count": 0,
+  "response_metadata": {
+    "next_cursor": ""
+  }
+}

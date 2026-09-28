@@ -11,6 +11,8 @@ Read from solution threads on #clued-in
 ==> math
 ```
 
+parse into the output is done, math and Slack are not
+
 ## Calculations
 
 - average per game for last week – beat this!

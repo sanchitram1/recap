@@ -50,10 +50,10 @@ Recap outputs a csv shaped like:
 
 ```csv
 date,person,game,score
-September 28,Dirk,maptap,862
-September 28,Sanchit Ram Arvind,maptap,938
-September 28,Eva,maptap,837
-September 28,Hannah Turk,maptap,895
+September 28,Foo,maptap,862
+September 28,Bar,maptap,938
+September 28,Foo Bar,maptap,837
+September 28,Bar Foo,maptap,895
 ```
 
 > [!note]

@@ -11,9 +11,10 @@ Three required components:
   2. An emoji map line: exactly 5 "<number>:<emoji>:" tokens, space-separated.
   3. A "Final score: <number>" line.
 
-Claim markers (two-stage, fail loudly): the message is claimed if it has
+Claim markers (two-stage): the message is claimed if it has
 "Final score:" OR a map-like line (2+ map tokens). If claimed but any
-component is missing or the map isn't exactly 5 tokens -> unparseable.
+component is missing or the map isn't exactly 5 tokens -> unparseable
+(reported after parsed scores).
 """
 
 from __future__ import annotations

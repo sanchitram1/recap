@@ -21,5 +21,7 @@ parse into the output is done, math and Slack are not
 
 ```zsh
 source .venv/bin/activate
-recap fixtures tests/fixtures/maptap_september_28.json
+recap fixtures --silent tests/fixtures/krillion_*
 ```
+
+`--silent` is the way to run this. It leaves off the DID NOT PARSE section, so stdout is one header row and then the scores. A single file works the same way: `recap fixtures --silent tests/fixtures/maptap_september_28.json`.

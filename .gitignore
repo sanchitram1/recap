@@ -33,6 +33,8 @@ pip
 
 # misc
 tmp.txt
+# local Slack thread transcripts used to build fixtures
+tests/fixtures/slack_copies/
 .DS_Store
 logs/
 *.db

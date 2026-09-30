@@ -4,11 +4,12 @@ Each game ships its own parser implementing `GameParser`. The registry
 `GAMES` maps slug -> parser instance. `parse_message` dispatches a
 message across all registered parsers and returns the best result.
 
-Parse outcomes (the "fail loudly" contract):
+Parse outcomes:
   - "ok"          : recognized as a score for this game, fully parsed
   - "not_a_score" : this parser does not claim the message (wrong game)
   - "unparseable" : this parser DOES claim the message (recognized the
-                    game) but could not extract a valid score — surface loudly
+                    game) but could not extract a valid score. The run
+                    continues; these messages are reported afterwards.
 """
 
 from __future__ import annotations

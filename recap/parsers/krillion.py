@@ -15,7 +15,7 @@ Three required components:
 
 If the header doesn't match -> not_a_score (not a Krillion post).
 If the header matches but any component is missing or the grid isn't
-exactly 7 tokens -> unparseable (fail loudly).
+exactly 7 tokens -> unparseable (reported after parsed scores).
 """
 
 from __future__ import annotations
@@ -30,7 +30,7 @@ SLUG = "krillion"
 # Loose recognition: the word "Krillion" anywhere in the first line,
 # but NOT the thread-title form "krillion scores 🧵" (that's a title,
 # not a score post). If this matches but the strict header doesn't,
-# the post is claimed but malformed -> unparseable (fail loudly).
+# the post is claimed but malformed -> unparseable (reported later).
 _CLAIMS = re.compile(r"\bkrillion\b(?!\s+scores\s+🧵)", re.IGNORECASE)
 # "Krillion #70" possibly followed by decorative emoji/whitespace.
 _HEADER = re.compile(r"^\s*krillion\s+#(\d+)\b", re.IGNORECASE)

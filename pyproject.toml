@@ -18,6 +18,7 @@ dev = [
 
 [project.scripts]
 recap = "recap.cli:main"
+jsonify = "recap.jsonify:main"
 
 [tool.setuptools]
 packages = ["recap", "recap.parsers"]

@@ -5,7 +5,7 @@ message through every parser and returns the best result:
 
   - If one parser returns "ok", use it.
   - Else if any parser returns "unparseable" (it claimed the message but
-    failed), return that — fail loudly.
+    failed), return that so the caller can report it after parsed scores.
   - Else (all "not_a_score"), return not_a_score.
 """
 

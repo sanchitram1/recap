@@ -15,7 +15,8 @@ TIME_RE = re.compile(r"^\s*(?P<time>\d{1,2}:\d{2}\s*(?:AM|PM))\s*$", re.IGNORECA
 INLINE_HEADER_RE = re.compile(r"^\s*(?P<person>.+?)\s+(?P<time>\d{1,2}:\d{2}\s*(?:AM|PM))\s*$", re.IGNORECASE)
 NAME_TOKEN = r"(?:[A-Z][A-Za-z.'-]*|\([^)]+\))"
 BRACKET_HEADER_RE = re.compile(
-    rf"(?P<person>{NAME_TOKEN}(?:\s+{NAME_TOKEN}){{0,6}})\s+\[(?P<time>\d{{1,2}}:\d{{2}}\s*(?:[AaPp][Mm]))\]",
+    rf"(?P<person>{NAME_TOKEN}(?:[^\S\r\n]+{NAME_TOKEN}){{0,6}})"
+    rf"[^\S\r\n]+\[(?P<time>\d{{1,2}}:\d{{2}}\s*(?:[AaPp][Mm]))\]",
 )
 INLINE_TIMESTAMP_RE = re.compile(r"\[(?P<time>\d{1,2}:\d{2}\s*(?:[AaPp][Mm]))\]")
 THREAD_TITLE_RE = re.compile(r"(?i)(?:\bscores\b|:thread:|:world_map:|🧵)")

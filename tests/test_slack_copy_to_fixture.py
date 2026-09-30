@@ -117,6 +117,31 @@ TimeGuessr #1213 — 31,432/50,000
     assert fixture["messages"][3]["text"] == "wow the second one i rely thought it was dc"
 
 
+def test_bracketed_author_does_not_absorb_previous_multiline_message():
+    raw = """Meredith Mende  [9:00 AM]
+oh snap,
+GAME ON
+Eunice  [9:22 AM]
+www.maptap.gg September 29
+90:crown: 95:sports_medal: 55:shushing_face: 91:crown: 80:sun_with_face:
+Final score: 808
+"""
+
+    messages = jsonify.parse_copied_messages(raw)
+
+    assert [(message.person, message.text) for message in messages] == [
+        ("Meredith Mende", "oh snap,\nGAME ON"),
+        (
+            "Eunice",
+            (
+                "www.maptap.gg September 29\n"
+                "90:crown: 95:sports_medal: 55:shushing_face: 91:crown: 80:sun_with_face:\n"
+                "Final score: 808"
+            ),
+        ),
+    ]
+
+
 def test_parse_maptap_copy_splits_same_author_inline_followup():
     raw = """Nader  [10:16 AM]
 :thread: maptap

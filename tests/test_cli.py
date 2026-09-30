@@ -18,7 +18,7 @@ from recap.cli import (
 )
 from recap.models import Message
 
-FIXTURES = Path(__file__).parent / "fixtures"
+FIXTURES = Path(__file__).parent / "fixtures" / "slack_copies" / "parsed"
 
 
 def test_krillion_fixture_date_is_post_day_not_puzzle_number():

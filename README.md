@@ -27,7 +27,8 @@ Invoke the `capture-slack-game-threads` skill in your favorite harness. It will 
       "ts": "1790615160.000000",
       "text": "Krillion #75\n310\n\nBen Franklin"
     }
-]
+  ]
+}
 ```
 
 Alternatively, you can copy an individual thread into a fixture, and then run `jsonify` followed by `recap`:

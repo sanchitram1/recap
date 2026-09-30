@@ -49,9 +49,10 @@ class MaptapParser:
     def parse(self, message: Message) -> ParseResult:
         text = message.text
         lines = [ln.strip() for ln in text.split("\n") if ln.strip()]
+        score_lines = _from_maptap_url(lines)
 
         has_final_score = bool(_CLAIMS.search(text))
-        has_loose_map = any(_LOOSE_MAP.match(ln) for ln in lines)
+        has_loose_map = any(_LOOSE_MAP.match(ln) for ln in score_lines)
         if not has_final_score and not has_loose_map:
             return ParseResult(
                 status="not_a_score",
@@ -59,7 +60,7 @@ class MaptapParser:
                 raw_text=text,
             )
 
-        score_value = _find(lines, _FINAL_SCORE)
+        score_value = _find(score_lines, _FINAL_SCORE)
         if score_value is None:
             return ParseResult(
                 status="unparseable",
@@ -68,7 +69,7 @@ class MaptapParser:
                 claimed_by=SLUG,
             )
 
-        emoji_map = _find_line(lines, _MAP_LINE)
+        emoji_map = _find_line(score_lines, _MAP_LINE)
         if emoji_map is None:
             return ParseResult(
                 status="unparseable",
@@ -77,7 +78,7 @@ class MaptapParser:
                 claimed_by=SLUG,
             )
 
-        puzzle_id = _find_line(lines, _NOT_MAP_OR_SCORE)
+        puzzle_id = _find_line(score_lines, _NOT_MAP_OR_SCORE)
         if puzzle_id is None:
             return ParseResult(
                 status="unparseable",
@@ -117,6 +118,14 @@ def _find_line(lines: list[str], pattern: re.Pattern) -> str | None:
         if pattern.match(ln):
             return ln
     return None
+
+
+def _from_maptap_url(lines: list[str]) -> list[str]:
+    """Ignore participant chatter before an explicit maptap.gg result URL."""
+    for index, line in enumerate(lines):
+        if _PUZZLE_PREFIX.match(line):
+            return lines[index:]
+    return lines
 
 
 def _normalize_puzzle_id(value: str) -> str:

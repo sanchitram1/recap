@@ -1,27 +1,68 @@
 # Recap
 
-how well do we do on the games?
+How well do we do on the games?
 
 ## Flow
 
+1. Agent copies all text from a solution thread from `#clued-in`
+2. `jsonify` each message to produce a list of messages
+3. `parse` each message to produce `(date, person, game, score)`
+
+## Usage
+
+Invoke the `capture-slack-game-threads` skill in your favorite harness. It will output:
+
+```json
+
+{
+  "source": "manual Slack copy",
+  "messages": [
+    {
+      "person": "John Adams",
+      "ts": "1790615160.000000",
+      "text": "Krillion (spoilers)\nJohn Adams"
+    },
+    {
+      "person": "Ben Franklin",
+      "ts": "1790615160.000000",
+      "text": "Krillion #75\n310\n\nBen Franklin"
+    }
+]
 ```
-Read from solution threads on #clued-in
-==> Parse outputs from each message in the thread
-==> (date, person, game, score)
-==> math
-```
 
-parse into the output is done, math and Slack are not
+Alternatively, you can copy an individual thread into a fixture, and then run `jsonify` followed by `recap`:
 
-## Calculations
-
-- average per game for last week – beat this!
-
-## Run a fixture
-
-```zsh
+```bash
+# 1. activate
+uv sync
 source .venv/bin/activate
-recap fixtures --silent tests/fixtures/krillion_*
+
+# 2. make JSON from copied content
+jsonify --date $TODAY path/to/copied/file.txt
+
+# 3. parse it
+recap fixtures tests/fixtures/jsonified_file.json --silent
+# recap accepts globs: tests/fixtures/krillion_*
 ```
 
-`--silent` is the way to run this. It leaves off the DID NOT PARSE section, so stdout is one header row and then the scores. A single file works the same way: `recap fixtures --silent tests/fixtures/maptap_september_28.json`.
+Recap outputs a csv shaped like:
+
+```csv
+date,person,game,score
+September 28,Dirk,maptap,862
+September 28,Sanchit Ram Arvind,maptap,938
+September 28,Eva,maptap,837
+September 28,Hannah Turk,maptap,895
+```
+
+> [!note]
+>
+> There might be some parsing errors in this. Feel free to adjust the parsers to improve our detection. The `--silent` flag suppresses the parsing failures to a count at the end of the result.
+
+## Contributing
+
+- Parser for `timeguessr`
+- Ignore non-score messages in each parser
+- Reliably identify a solution thread
+- Parse the emojis to collect scoring-specific information
+

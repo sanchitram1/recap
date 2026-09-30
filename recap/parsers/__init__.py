@@ -15,11 +15,13 @@ from recap.models import Message
 from recap.parsers.base import GameParser, ParseResult
 from recap.parsers.krillion import KrillionParser
 from recap.parsers.maptap import MaptapParser
+from recap.parsers.timeguessr import TimeGuessrParser
 
 # Fixed list — grows as new game parsers are added.
 GAMES: list[GameParser] = [
     KrillionParser(),
     MaptapParser(),
+    TimeGuessrParser(),
 ]
 
 

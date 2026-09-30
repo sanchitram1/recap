@@ -61,8 +61,8 @@ September 28,Hannah Turk,maptap,895
 
 ## Contributing
 
-- Parser for `timeguessr`
-- Ignore non-score messages in each parser
-- Reliably identify a solution thread
-- Parse the emojis to collect scoring-specific information
+- [x] Parser for `timeguessr`
+- [ ] Ignore non-score messages in each parser
+- [ ] Reliably identify a solution thread
+- [ ] Parse the emojis to collect scoring-specific information
 

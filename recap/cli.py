@@ -49,8 +49,8 @@ _MONTHS = (
 
 
 def fixture_date(score: Score) -> str:
-    """Date column for fixture CSV. Krillion posts identify the puzzle by number, so use the post day."""
-    if score.game_slug == "krillion":
+    """Use the post day when a game's puzzle identifier is numeric."""
+    if score.game_slug in {"krillion", "timeguessr"}:
         posted = score.posted_at.astimezone(ZoneInfo("America/Los_Angeles"))
         return f"{_MONTHS[posted.month - 1]} {posted.day}"
     return score.puzzle_id

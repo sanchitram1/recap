@@ -42,7 +42,17 @@ def test_collect_fixture_facts_from_manual_slack_copy():
         ("September 28", "Sragvi Vadali", "maptap", 872),
         ("September 28", "Nader", "maptap", 839),
         ("September 28", "Nathan Sutherland", "maptap", 895),
-        ("September 28", "Hannah Turk\nShreya", "maptap", 910),
+        ("September 28", "Hannah Turk", "maptap", 910),
+    ]
+
+
+def test_collect_fixture_facts_parses_timeguessr_scores():
+    facts, issues = collect_fixture_facts(FIXTURES / "timeguessr_sep_29.json")
+
+    assert issues == []
+    assert len(facts) == 12
+    assert ("September 29", "AZ Nicdao", "timeguessr", 44843) in [
+        (fact.date, fact.person, fact.game, fact.score) for fact in facts
     ]
 
 
@@ -62,8 +72,7 @@ def test_print_fixture_facts_outputs_csv():
         "September 28,Sragvi Vadali,maptap,872",
         "September 28,Nader,maptap,839",
         "September 28,Nathan Sutherland,maptap,895",
-        'September 28,"Hannah Turk',
-        'Shreya",maptap,910',
+        "September 28,Hannah Turk,maptap,910",
     ]
 
 
